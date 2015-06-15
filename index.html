@@ -1,0 +1,60 @@
+<html>
+	<head>
+		<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/style.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		<script src="js/angular/angular.min.js"></script>
+		<script src="https://code.angularjs.org/1.2.28/angular-route.min.js"></script>
+	</head>
+	<body ng-app="ShowEmails">
+		<div class="container">
+			<div class="data" ng-controller="MainController">
+				<div class="row">
+					<div class="col-lg-4">
+						<form class="form-inline">
+							<div class="form-group text-center">
+								<!-- select list with ng-repeat of all from/to users, later cleaned up with jQuery -->
+								<label>Choose A User</label>
+								<select name="people" class="form-control" ng-model="sender">
+									<option value="{{ f.from }}" ng-repeat="f in emails">{{ f.from }}</option>
+									<option value="{{ t.to }}" ng-repeat="t in emails">{{ t.to }}</option>
+								</select>
+								<button type="button" class="btn btn-primary" ng-click="reset()">Reset</button>
+							</div>
+						</form>
+					</div>
+					<!-- search box with filter connected to data display -->
+					<div class="col-lg-8">
+						<input type="text" class="form-control search" placeholder="Search" ng-model="search">
+					</div>
+					<div class="col-lg-8">
+						<!-- show data/filtered data -->
+						<h3 class="header">Showing messages including user: <span ng-bind="sender">all</span></h3>
+						<div ng-repeat="email in emails | filter:sender | filter:search">
+							<div class="panel panel-default email">
+								<div class="panel-heading subject">{{ email.subject }}</div>
+								<div class="panel-body">
+									<h5><strong>To:</strong> {{ email.to }}</h5>
+									<h5 class="from"><strong>From:</strong> {{ email.from }}</h5>
+									<!-- ng-hide for when there is no cc value -->
+									<span ng-hide="email.cc[0] == null" class="cc"><strong>CC: </strong></span>
+									<ul class="cc-list">
+										<li ng-repeat="c in email.cc">{{ c }}</li>
+									</ul>
+								</div>
+								<div class="panel-footer">{{ email.body }}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- include Angular files -->
+		<script src="js/app.js"></script>
+		<script src="js/controllers/MainController.js"></script>
+		<script src="js/services/emails.js"></script>
+		<!-- some jQuery -->
+		<script src="js/script.js"></script>
+	</body>
+</html>
